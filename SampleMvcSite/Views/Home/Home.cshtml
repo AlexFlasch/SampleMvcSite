@@ -1,0 +1,149 @@
+﻿@* This is a razor block comment.
+    Razor is the engine that parses the HTML and
+    allows you to insert C# code direclty into
+    your HTML files. Its a godsend. Trust me.
+    You'll be using these in .cshtml files.*@
+@{
+    /*
+     * Here you see a razor code block. This is
+     * used to tell razor you want to insert some
+     * C# code. You can still use HTML tags in
+     * these blocks.
+     */
+    ViewBag.Title = "Home"; //ViewBag.Title will be the title of the tab. It does not need to be the same as the .cshtml filename
+}
+
+@using SampleMvcSite.Models
+@model SampleMvcSite.Models.HomeModel
+           
+@*Here's how you can load a javascript file*@
+<script src="@Url.Content("~/Scripts/SiteScripts/HomeScript.js")"></script>
+
+@*Here's how you can load a stylesheet*@
+<link rel="text/css" href="@Url.Content("~/Views/Home/HomeStylesheet.css")"/>
+
+<!--Here's your typical HTML tags, they work as usual!-->
+<html>
+    <head>
+        <h1>I'm a H1 header!</h1>
+    </head>
+    <body>
+        <style>
+            body {
+                background: grey;
+                border: 1px;
+                border-color: black;
+            }
+        </style>
+
+        <div id="homeWrapper">
+            @Scripts.Render("~/bundles/jquery")
+            <p>
+                I'm just a typical p element.<br/><br/>
+
+                Insert text and stuff here.<br/><br/>
+
+                Here's a C# variable being displayed!<br/>
+                @{
+                    @*Here you can see me accessing the data in the model.
+                        If you're unfamiliar with lambda functions, I'll try
+                        and give a quick crash course on them here.
+
+                          So, m => m.someRandomString is the lambda function here.
+
+                          Lambda functions are essentially shorthand for delegates,
+                          so to understand a lambda function you're first going to
+                          need to understand a delegate.
+
+                          You can create a delegate like so:
+                              public delegate void Del(string message)
+
+                          Ok, so what this really is, is basically a variable that can
+                          be assigned a function call for its value. So if you remember
+                          function pointers in C and/or C++, its very similar.
+
+                          So, now that we have our delegate, we can do this:
+                              public static void DelegateMethod(string message)
+                              {
+                                  System.Console.WriteLine(message);
+                              }
+
+                          This is the method we'll assign to our delegate.
+                              Del handler = DelegateMethod;
+
+                          Now we can call our delegate.
+                              handler("Hello World!");
+
+                          OK, so hopefully that makes sense. Now that you have had a brief
+                          lesson on delegates we can get to lambda functions. Lambda functions
+                          are basically an anonymous function, and basically do all of the
+                          above steps in a very short syntax.
+
+                          Alright, let's use just a very simple function like the previous example
+                          for the delegate.
+                              delegate int del(int i);
+                              static void Main(string[] args)
+                              {
+                                  del myDelegate = x => x * x;
+                                  int j = myDelegate(5); //j will equal 25
+                              }
+
+                          This basically means we have a function that accepts an int,
+                          and in our main method we make a del variable called myDelegate.
+                          When we say myDelegate = x => x * x; it automatically knows to make
+                          x an int, and it knows that it returns an int because the delegate says
+                          so.
+
+                          So x => x * x is where its confusing for most. Basically, the first x is
+                          the name of the input you're giving to the delegate. So x => means I'm giving
+                          a variable (whose type is automatically inferred by C#) to the function.
+                          after x => you see x * x. x * x is the expression to give to the function.
+                          The function will return x * x. So int j = myDelegate(5); is in essence similar
+                          to saying "Hey, I want to set x equal to 5 in the lambda expression." So it does that.
+                          It makes x = 5, and then passes the expression 5 * 5 to the delegate function.
+                          And of course, 5 * 5 = 25, so int j will be equal to 25.
+
+                          I'm honestly not too familiar with lambda expressions myself, but this youtube
+                          video seems to explain it pretty well:
+                              http://www.youtube.com/watch?v=LDgQ-spnrYY
+                          So hopefully if you didn't understand my explanation, that one is a bit more clear.*@
+
+                    @*Gets the value of someRandomString in HomeModel*@
+                    @Html.DisplayFor(m => m.someRandomString);
+                }
+                <br/>
+                <button id="bestButtonEver">Press Me!</button>
+            </p>
+        </div>
+        <script>
+            //this is jQuery code, I can explain quickly in person.
+            //this line basically means, once the page is loaded, do this
+            $(document).ready(function () {
+                HomeScript.init();
+            });
+
+            //this is a namespace in javascript if you're unfamiliar.
+            var HomeScript = new function () {
+                var i = 0;
+
+                //this is a public function, it can be accessed outside of the namespace
+                this.init = function () {
+                    //this changes the button's icon.
+                    $("#bestButtonEver").button({
+                        icons: { primary: "ui-icon-heart" }
+                    });
+
+                    $("#bestButtonEver").click(function () {
+                        if (i % 2 === 0) {
+                            $("body").css("background: white");
+                            i++;
+                        } else {
+                            $("body").css("background: grey");
+                            i++;
+                        }
+                    });
+                }
+            }
+        </script>
+    </body>
+</html>
